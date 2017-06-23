@@ -4,7 +4,9 @@ const defaultOptions = {
 	quality: 0.92,
 	width: undefined,
 	height: undefined,
-	Canvas: undefined
+	Canvas: undefined,
+	align_v: undefined,
+	align_h: undefined
 };
 
 // Return Promise
@@ -44,7 +46,18 @@ const mergeImages = (sources = [], options = {}) => new Promise(resolve => {
 			canvas.height = getSize('height');
 
 			// Draw images to canvas
-			images.forEach(image => ctx.drawImage(image.img, image.x || 0, image.y || 0));
+			images.forEach(function(image) {
+				console.log(image);
+				var x = image.x || 0;
+				var y = image.y || 0;
+				if(options.align_h == 1 || options.align_h == -1) {
+					x -= options.align_h * image.width / 2.0;
+				}
+				if(options.align_v == 1 || options.align_v == -1) {
+					y -= options.align_v * image.height / 2.0;
+				}
+				ctx.drawImage(image.img, x, y);
+			});
 
 			if (options.Canvas && options.format === 'image/jpeg') {
 				// Resolve data URI for node-canvas jpeg async
